@@ -1,0 +1,26 @@
+version: "3.7"
+services:
+
+  mdb:
+    image: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=blog_db
+
+  pma:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_HOST=mdb
+    depends_on:
+      - mdb
+    ports:
+      - "8081:80"
+
+  php-apache:
+    build: .
+    volumes:
+      - .:/var/www/html
+    ports:
+      - "8080:80"
+    depends_on:
+      - mdb
